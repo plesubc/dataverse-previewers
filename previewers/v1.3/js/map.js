@@ -10,6 +10,9 @@ function translateBaseHtmlPage() {
 function writeContentAndData(data, fileUrl, file, title, authors) {
     addStandardPreviewHeader(file, title, authors);
 
+    //Open index map visibility flag
+    var visflag = false;
+
     // convert string data to json
     var geoJsonData = JSON.parse(data);
 
@@ -17,39 +20,78 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
     var map = L.map('map').fitWorld();
 
     // load a tile layer
-    //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    //    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    //}).addTo(map);
-
-
 	L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.png', {
 	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
     maxZoom: 20,
 	}).addTo(map);
 
-	//Attribute table parser
-	function collate(lay){
-	const jdict = lay.feature.properties 
-	var out = '';
-	out += '<table><th>Attribute Name</th><th>Value</th>'
-	console.log(out);
-	for (const property in jdict){
-		out += '<tr><td>'
-		out += `${property} </td><td> ${jdict[property]}`
-		out += '</td></tr>'
-		};
-		//console.log(out);					  
-	return out}
+    //Creates a tabular attribute table and
+    //strips out null values to make it shorter
+    //although I'm not sure that's the most desirable
+    function collate(lay){
+    const jdict = lay.feature.properties
+    var out = '';
+    out += '<table><th>Attribute Name</th><th>Value</th>'
+    for (const property in jdict){
+    	if (jdict[property]!== null){
+    			out += '<tr><td>'
+    			out += `${property} </td><td> ${jdict[property]}`
+    			out += '</td></tr>'}
+    	};
+    return out}
 
-	//Custom CSS class plus making sure everything fits
+
+	//Sets popup to a reasonable size to accommodate
+	//attribute table
 	customOptions  = { 'className' : 'mapOptions',
-				       'maxWidth' :800,
-				       'minWidth' :250}
+					   'maxWidth' :800,
+					   'minWidth' :250}
+	
+
+	//Check if geojson is an Open Index Map
+	function is_oim(lay){
+		//Open index map has no real standard. However, these 3 
+	    //attributes are required for Geoblacklight, so. . .
+		const oim_def=['available','physHold', 'digHold']
+		//console.log('is_oim')
+		//console.log(lay);
+		var count=0;
+		jdict = lay.properties;
+		//console.log(jdict);
+		oim_def.forEach(function(prop){
+			if (jdict.hasOwnProperty(prop) && jdict[prop]!== null){
+			count +=1;}
+	     })
+		if (count == 3){return true}
+		else {return false}
+	   }
+	
+	//And open index map styling
+	function style_oim(lay){
+		//Styles any open index map layer a different colour if "available" == true
+		 //return {fillColor: '#4E9C68'},//green is for "GO"
+		if (is_oim(lay)==true)
+	       {//console.log('TRUE');
+			visflag = true;
+	        return {fillColor: 'orange',
+	 		        fillOpacity: 0.4,
+					color: 'orange',
+					opacity: 1.0}
+	       }
+	    }
+	
 
     // add data to map and zoom to added features
-	var geoJson = L.geoJSON(data)
-	geoJson.bindPopup(collate, customOptions)
-	geoJson.addTo(map)
-	map.fitBounds(geoJson.getBounds());
+		geoJson = L.geoJSON(data, {style:style_oim})
+		geoJson.bindPopup(collate, customOptions)
+		geoJson.addTo(map)
+		map.fitBounds(geoJson.getBounds());
+
+
+	//Open Index map text reveal
+	console.log(visflag);
+	if (visflag == true){
+		document.getElementById("oim").style.visibility = "visible";}
+
 
 }

@@ -1,2 +1,6 @@
+# map {height: 80%;
+	   width: 80%}	
 .mapOptions table th {border-bottom: 2px solid #000}
 .mapOptions table tr:nth-child(even) {background-color:#EEE;}
+
+#oim{visibility: hidden}

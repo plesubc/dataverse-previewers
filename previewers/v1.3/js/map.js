@@ -10,13 +10,7 @@ function translateBaseHtmlPage() {
 function writeContentAndData(data, fileUrl, file, title, authors) {
     addStandardPreviewHeader(file, title, authors);
 
-    //Open index map visibility flag
-    var visflag = false;
-
-    // convert string data to json
-    var gdata = JSON.parse(data);
-
-    // initialize the map
+	// initialize the map
     var map = L.map('map').fitWorld();
 
     // load a tile layer
@@ -25,28 +19,33 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
     maxZoom: 20,
 	}).addTo(map);
 
-    //Creates a tabular attribute table and
-    //strips out null values to make it shorter
-    //although I'm not sure that's the most desirable
-    function collate(lay){
-    const jdict = lay.feature.properties
-    var out = '';
-    out += '<table><th>Attribute Name</th><th>Value</th>'
-    for (const property in jdict){
-    	if (jdict[property]!== null){
-    			out += '<tr><td>'
-    			out += `${property} </td><td> ${jdict[property]}`
-    			out += '</td></tr>'}
-    	};
-    return out}
 
+    // convert string data to json
+    var gdata = JSON.parse(data);
 
-	//Sets popup to a reasonable size to accommodate
-	//attribute table
+	//Open index map visibility flag
+    var visflag = false;
+
+	//Creates a tabular attribute table and
+	//strips out null values to make it shorter
+	//although I'm not sure that's the most desirable
+
+	function collate(lay){
+	const jdict = lay.feature.properties
+	var out = '';
+	out += '<table><th>Attribute Name</th><th>Value</th>'
+	for (const property in jdict){
+		if (jdict[property]!== null){
+				out += '<tr><td>';
+				out += `${property} </td><td> ${jdict[property]}`;
+				out += '</td></tr>';}
+		};
+		return out}
+
+	//Sets popup to a reasonable size to accommodate //attribute table
 	customOptions  = { 'className' : 'mapOptions',
 					   'maxWidth' :800,
 					   'minWidth' :250}
-	
 
 	//Check if geojson is an Open Index Map
 	function is_oim(lay){
@@ -76,18 +75,14 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
 	       }
 	    }
 	
-
-    // add data to map and zoom to added features
-		geoJson = L.geoJSON(gdata, {style:style_oim})
-		geoJson.bindPopup(collate, customOptions)
-		geoJson.addTo(map)
-		map.fitBounds(geoJson.getBounds());
-
+	//Add data to it to the map and zoom to the features
+	geoJson = L.geoJSON(gdata, {style:style_oim})
+	geoJson.bindPopup(collate, customOptions)
+	geoJson.addTo(map)
+	map.fitBounds(geoJson.getBounds());
 
 	//Open Index map text reveal
 	console.log(visflag);
 	if (visflag == true){
 		document.getElementById("oim").style.visibility = "visible";}
-
-
 }

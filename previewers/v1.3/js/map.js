@@ -22,6 +22,8 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
 
     // convert string data to json
     var gdata = JSON.parse(data);
+	console.log('parsed gdata');
+	console.log(gdata);
 
 	//Open index map visibility flag
     var visflag = false;
@@ -77,9 +79,9 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
 	
 
 	//Add data to it to the map and zoom to the features
-	geoJson = L.geoJSON(gdata, {style:style_oim})
-	geoJson.bindPopup(collate, customOptions)
-	geoJson.addTo(map)
+	geoJson = L.geoJSON(gdata, {style:style_oim});
+	geoJson.bindPopup(collate, customOptions);
+	geoJson.addTo(map);
 	map.fitBounds(geoJson.getBounds());
 
 	//Open Index map text reveal
@@ -88,4 +90,5 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
 		document.getElementById("oim").style.visibility = "visible";}
 	console.log(geoJson);
 	console.log(gdata);
+	console.log('Why have I not reached here');
 }

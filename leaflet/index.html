@@ -63,7 +63,7 @@
 */
 
 //***********************
-var data = new Object()
+var gdata = new Object()
 //************************
 //load data
 
@@ -77,14 +77,14 @@ function get_data(fil){
 			if (xhr.status !== 200) return
 			//console.log(xhr.responseText)
 			//L.geoJSON(xhr.response).addTo(map);
-			data = JSON.parse(xhr.responseText);
+			gdata = JSON.parse(xhr.responseText);
 		};
 		xhr.send();
 	}
 //get_data('Ethiopia_50K_Topo_UBC_MQR7AY.geojson')
 //get_data('UBC_Ortho_Index_2020.geojson')
 get_data('Greenland.geojson')
-console.log(data);
+console.log(gdata);
 
 //define geojson
 var geojson;
@@ -148,7 +148,7 @@ function style_oim(lay){
     }
 
 //Add data to it to the map and zoom to the features
-geoJson = L.geoJSON(data, {style:style_oim})
+geoJson = L.geoJSON(gdata, {style:style_oim})
 geoJson.bindPopup(collate, customOptions)
 geoJson.addTo(map)
 map.fitBounds(geoJson.getBounds());

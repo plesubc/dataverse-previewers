@@ -14,7 +14,7 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
     var visflag = false;
 
     // convert string data to json
-    var geoJsonData = JSON.parse(data);
+    var gdata = JSON.parse(data);
 
     // initialize the map
     var map = L.map('map').fitWorld();
@@ -53,11 +53,8 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
 		//Open index map has no real standard. However, these 3 
 	    //attributes are required for Geoblacklight, so. . .
 		const oim_def=['available','physHold', 'digHold']
-		//console.log('is_oim')
-		//console.log(lay);
 		var count=0;
 		jdict = lay.properties;
-		//console.log(jdict);
 		oim_def.forEach(function(prop){
 			if (jdict.hasOwnProperty(prop) && jdict[prop]!== null){
 			count +=1;}
@@ -71,8 +68,7 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
 		//Styles any open index map layer a different colour if "available" == true
 		 //return {fillColor: '#4E9C68'},//green is for "GO"
 		if (is_oim(lay)==true)
-	       {//console.log('TRUE');
-			visflag = true;
+	       {visflag = true;
 	        return {fillColor: 'orange',
 	 		        fillOpacity: 0.4,
 					color: 'orange',
@@ -82,7 +78,7 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
 	
 
     // add data to map and zoom to added features
-		geoJson = L.geoJSON(data, {style:style_oim})
+		geoJson = L.geoJSON(gdata, {style:style_oim})
 		geoJson.bindPopup(collate, customOptions)
 		geoJson.addTo(map)
 		map.fitBounds(geoJson.getBounds());

@@ -75,6 +75,7 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
 	       }
 	    }
 	
+
 	//Add data to it to the map and zoom to the features
 	geoJson = L.geoJSON(gdata, {style:style_oim})
 	geoJson.bindPopup(collate, customOptions)
@@ -85,4 +86,6 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
 	console.log(visflag);
 	if (visflag == true){
 		document.getElementById("oim").style.visibility = "visible";}
+	console.log(geoJson);
+	console.log(gdata);
 }

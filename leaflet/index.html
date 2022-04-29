@@ -1,0 +1,141 @@
+<html>
+<head>
+		<title>
+				Leaflet test
+		</title>
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+   integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+   crossorigin=""/>
+	  <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+   integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+   crossorigin=""></script>
+	<!--<script src="leaflet.ajax.min.js"></script>-->
+<style>
+#map { height: 800px;
+	   width: 800px}
+/*Custom style for leaflet options*/
+.mapOptions table th {border-bottom: 2px solid #000}
+.mapOptions table tr:nth-child(even) {background-color:#EEE;}
+</style>
+
+</head>
+<body>
+		 <div id="map"></div>
+</body>
+		<script>
+				var map = L.map('map').fitWorld();
+				L.popup(classname='paul')
+
+/*
+				//var map = L.map('map').setView([51.505, -0.09], 13);
+				//L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				//L.tileLayer('https://worldtiles3.waze.com/tiles/{z}/{x}/{y}.png', {
+				//L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+				//L.tileLayer('http://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+				//L.tileLayer('http://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+				//L.tileLayer('https://tile.mierune.co.jp/mierune_mono/{z}/{x}/{y}.png', {
+				//L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png?lang=en', { */
+				//L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
+				L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.png', {
+
+   //attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+   //attribution: 'Map data &copy; <a href="https://www.waze.com/">Waze</a> contributors, Imagery &copy; <a href="https://waze.com</a>',
+	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
+    maxZoom: 20,
+    //id: 'mapbox/streets-v11',
+    //tileSize: 512,
+    //tileSize: 256,
+    //zoomOffset: -1,
+    //accessToken: 'your.mapbox.access.token'
+}).addTo(map);
+/*
+				var circle = L.circle([51.508, -0.11], {
+				color: 'red',
+				fillColor: '#f03',
+				fillOpacity: 0.5,
+				radius: 500
+				}).addTo(map);
+*/
+
+//***********************
+var data = new Object()
+//************************
+//load data
+
+function get_data(fil){
+		let xhr = new  XMLHttpRequest();
+		xhr.open('GET', fil, false);
+		//xhr.open('GET', './UBC_Ortho_Index_2020.geojson', false);
+		//xhr.open('GET', './Ethiopia_50K_Topo_UBC_MQR7AV.geojson');
+		//xhr.setRequestHeader('Content-Type', 'application/json');
+		//xhr.responseType = 'json';
+		xhr.onload = function() {
+			console.log(xhr.status);
+			if (xhr.status !== 200) return
+			//console.log(xhr.responseText)
+			//L.geoJSON(xhr.response).addTo(map);
+			data = JSON.parse(xhr.responseText);
+		};
+		xhr.send();
+	}
+get_data('Ethiopia_50K_Topo_UBC_MQR7AY.geojson')
+console.log(data);
+
+
+//Creates a tabular attribute table and
+//strips out null values to make it shorter
+//although I'm not sure that's the most desirable
+
+function collate(lay){
+const jdict = lay.feature.properties
+var out = '';
+out += '<table><th>Attribute Name</th><th>Value</th>'
+console.log(out);
+for (const property in jdict){
+	if (jdict[property]!== null){
+			out += '<tr><td>'
+			out += `${property} </td><td> ${jdict[property]}`
+			out += '</td></tr>'}
+	};
+	console.log(out);
+return out}
+
+//Sets popup to a reasonable size to accommodate
+//attribute table
+customOptions  = { 'className' : 'mapOptions',
+				   'maxWidth' :800,
+				   'minWidth' :250}
+
+//Check if geojson is an Open Index Map
+function is_oim(lay){
+	//Open index map has no real standard. However, these 3 
+    //attributes are required for Geoblacklight, so. . .
+	const oim_def=['available','physHold', 'digHold']
+	var count=0
+	jdict = lay.feature.properties
+	for (const property in oim_def){
+		if (jdict.hasOwnProperty(property)){
+		count +=1;}
+     }
+	if (count == 3){return true}
+	else {return false}
+   }
+
+//And open index map styling
+function style_oim(lay){
+	//Styles any open index map layer a different colour if "available" == true
+	if (is_oim(lay)==true){document.write('TRUE')}
+}
+
+
+
+//Actually adding it to the map
+var geoJson = L.geoJSON(data)
+geoJson.bindPopup(collate, customOptions)
+geoJson.addTo(map)
+map.fitBounds(geoJson.getBounds());
+
+</script>
+
+</html>

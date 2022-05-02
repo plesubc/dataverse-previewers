@@ -1,5 +1,6 @@
-# map {height: 600px;
-	   width: 600px;}	
+#map {height: 80%;
+	   width: 100%;}	
+.mapOptions table {width: 100%;}
 .mapOptions table th {border-bottom: 2px solid #000}
 .mapOptions table tr:nth-child(even) {background-color:#EEE;}
 

@@ -4,4 +4,6 @@
 .mapOptions table th {border-bottom: 2px solid #000}
 .mapOptions table tr:nth-child(even) {background-color:#EEE;}
 
-#oim{visibility: hidden}
+/*#oim{visibility: hidden}*/
+#oim{display: none;}
+#hilite{color:orange;}

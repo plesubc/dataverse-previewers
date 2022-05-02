@@ -92,4 +92,6 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
     if (visflag == true){
     	document.getElementById("oim").style.visibility = "visible";}
 
+    if (visflag == true){
+    	document.getElementById("oim").style.display = "block";}
 }

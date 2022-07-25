@@ -11,6 +11,8 @@
    integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
    crossorigin=""></script>
 	<!--<script src="leaflet.ajax.min.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.8.0/proj4.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4leaflet/1.0.2/proj4leaflet.min.js"></script>
 <style>
 #map { height: 600px;
 	   width: 600px;}
@@ -55,13 +57,17 @@ function get_data(fil){
 		};
 		xhr.send();
 	}
-//get_data('Ethiopia_50K_Topo_UBC_MQR7AY.geojson')
+get_data('Ethiopia_50K_Topo_UBC_MQR7AY.geojson')
 //get_data('UBC_Ortho_Index_2020.geojson')
-get_data('Greenland.geojson')
+//get_data('Greenland.geojson')
+//get_data('pop91lin.geojson')
+//get_data('geojson/UBC_Ortho_Index_2019_84.geojson')
+get_data('repaired/UBC_Poly.geojson')
 console.log(gdata);
-
+//var stc_lambert = new L.Proj.CRS("EPSG:3347", "+proj=lcc +lat_1=49 +lat_2=77 +lat_0=63.390675 +lon_0=-91.86666666666666 +x_0=6200000 +y_0=3000000 +ellps=GRS80 +datum=NAD83 +units=m +no_defs")
+//proj4.defs("urn:ogc:def:crs:EPSG::3347", "+proj=lcc +lat_1=49 +lat_2=77 +lat_0=63.390675 +lon_0=-91.86666666666666 +x_0=6200000 +y_0=3000000 +ellps=GRS80 +datum=NAD83 +units=m +no_defs")
 //define geojson
-//var geojson;
+var geojson;
 //Open index map visibility flag
 var visflag = false;
 
@@ -119,7 +125,10 @@ function style_oim(lay){
 
 
 //Add data to it to the map and zoom to the features
-geoJson = L.geoJSON(gdata, {style:style_oim})
+//geoJson = L.geoJSON(gdata, {style:style_oim, crs:L.CRS.code='EPSG:3347'})
+//geoJson = L.Proj.geoJson(gdata, {style:style_oim, crs:stc_lambert})
+geoJson = L.geoJSON(gdata, {style:style_oim});
+//console.log(L.CRS)
 geoJson.bindPopup(collate, customOptions)
 geoJson.addTo(map)
 map.fitBounds(geoJson.getBounds());

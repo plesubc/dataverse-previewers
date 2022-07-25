@@ -9,4 +9,4 @@ leaflet/leaflet.ajax.min.js
 leaflet/sample.txt
 leaflet/t2.html
 leaflet/test.html
-
+leaflet/**

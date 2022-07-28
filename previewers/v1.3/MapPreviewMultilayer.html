@@ -17,7 +17,12 @@
         <!-- Leaflet -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="anonymous"/>
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin="anonymous"></script>
-        <link type="text/css" rel="stylesheet" href="css/preview.css" />
+
+
+	<!--https://github.com/mapbox/leaflet-pip-->
+	<script src="https://unpkg.com/@mapbox/leaflet-pip@latest/leaflet-pip.js"></script>
+    <link type="text/css" rel="stylesheet" href="css/preview.css" />
+    <link type="text/css" rel="stylesheet" href="css/map_preview.css" />
     </head>
 
     <body class="container">
@@ -26,11 +31,18 @@
             <h1 class="page-title mapPreviewText">Map Preview</h1>
             <div class='preview-container'>
                 <div class='preview-header'></div>
+				<div id='oim'>
+				<h2>Open Index Map</h2>
+				<p>
+				This is an <a href='https://openindexmaps.org/'>Open Index Map</a>. Index maps show information about a series of maps, either physical or digital. <span id="hilite">Highlighted</span> regions indicate that holdings of that region are available.
+				<p>
+				</div>
                 <div class='preview'>
-                    <div id="map" style="width: 800px; height: 500px;"></div>
+                    <div id="map"></div>
+					<div id="attributetable">WHAR ATTR</div>
                 </div>
             </div>
         </main>
-        <script type="text/javascript" src="js/map.js"></script>
+        <script type="text/javascript" src="js/map.multilayer.js"></script>
     </body>
 </html>

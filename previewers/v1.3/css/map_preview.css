@@ -3,7 +3,15 @@
 .mapOptions table {width: 100%;}
 .mapOptions table th {border-bottom: 2px solid #000}
 .mapOptions table tr:nth-child(even) {background-color:#EEE;}
+.mapOptions td.value {padding-left: 1em}
+.mapOptions td.attr {font-style: italic;
+                     border: 1px solid;
+			         border-right-style: solid;
+	 				 border-left-style: hidden;
+                     border-bottom-style: hidden;
+                     padding-right: 1em;
+                    }
 
-/*#oim{visibility: hidden}*/
+
 #oim{display: none;}
 #hilite{color:orange;}

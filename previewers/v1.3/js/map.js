@@ -17,10 +17,11 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
     var map = L.map('map').fitWorld();
 
     // load a tile layer
-	L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.png', {
+	const base = L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.png', {
 	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
     maxZoom: 20,
-    }).addTo(map);
+    })
+	base.addTo(map)
 
 
 	//Open index map text visibility flag
@@ -94,14 +95,50 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
     		  		color: 'orange',
     		  		opacity: 1.0}
            }
-        }
+		}
+
+    //And open index map styling per feature
+    function style_oim_feat(feature){
+    	//const oim_def=['available','physHold', 'digHold']
+    	jdict = feature.properties;
+		console.log(jdict);
+		//let count = 0;
+    	//oim_def.forEach(function(prop){
+    	//	if (jdict.hasOwnProperty(prop) && jdict[prop]!== null){
+    	//	count +=1;}
+        // })
+    	//Styles any open index map feature a different colour if any
+		//of the above attributes aren't null
+		if (jdict.available.toLowerCase() == 'true'){
+				console.log('true')
+				visflag = true;
+	            return {fillColor: 'orange',
+	   	        	    fillOpacity: 0.4,
+	   	        	    color: 'orange',
+	   	        	    opacity: 1.0}}
+	    else {  console.log('false')
+				return {fillColor: 'blue',
+	    		        fillOpacity: 0.4,
+	    		        color: 'MediumPurple',
+	    		        opacity: 1.0}
+		}
+		}
 
 	//Add the GeoJSON to the page
 	//yes, it's probably bad form to define the variable and use it in the
 	//function below.
-    var geoJson = L.geoJSON(gdata, {style:style_oim});
+    //var geoJson = L.geoJSON(gdata, {style:style_oim});
+    var geoJson = L.geoJSON(gdata, {style:style_oim_feat});
+
 	geoJson.addTo(map)
     map.fitBounds(geoJson.getBounds());
+	
+
+
+//var opacitySlider = new L.Control.opacitySlider();
+    //map.addControl(opacitySlider);
+    //opacitySlider.setOpacityLayer(geoJson)
+	//opacitySlider.addTo(map)
 
     //Get coordinates
     function onMapClick(e) {

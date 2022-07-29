@@ -109,7 +109,8 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
         // })
     	//Styles any open index map feature a different colour if any
 		//of the above attributes aren't null
-		if (jdict.available.toLowerCase() == 'true'){
+		if (jdict.hasOwnProperty("available") &&
+			jdict.available.toLowerCase() == 'true'){
 				console.log('true')
 				visflag = true;
 	            return {fillColor: 'orange',
@@ -117,9 +118,9 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
 	   	        	    color: 'orange',
 	   	        	    opacity: 1.0}}
 	    else {  console.log('false')
-				return {fillColor: 'blue',
+				return {fillColor: 'CornflowerBlue',
 	    		        fillOpacity: 0.4,
-	    		        color: 'MediumPurple',
+	    		        color: 'CornflowerBlue',
 	    		        opacity: 1.0}
 		}
 		}

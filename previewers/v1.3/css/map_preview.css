@@ -12,7 +12,26 @@
                      border-top-style: none;
                      padding-right: 1em;
                     }
+.legend {background-color: rgba(255,255,255,0.8);
+		border-radius: 10px;
+		padding: 1em;
+		width: 200px;
+		box-shadow: 0 0 8px #888888;
+	    }
 
+.legend strong{font-size: 120%;
+				}
+.legend #entry {padding-left: 1em;
+				}
+
+.dot {    height: 12px;
+          width: 12px;
+          border-radius: 50%;
+          display: inline-block;
+		  color:yellow;
+                }                   
+.dot#hilite{background-color:orange;}
+.dot#unavailable{background-color:CornflowerBlue;}
 
 #oim{ display: none;}
 #hilite {color:orange;}

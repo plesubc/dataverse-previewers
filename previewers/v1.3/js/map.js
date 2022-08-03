@@ -170,8 +170,20 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
     //as a normal GeoJSON and the <id="oim"> material is not displayed
 	//on the preview page
     if (visflag == true){
-    	document.getElementById("oim").style.visibility = "visible";}
+    	document.getElementById("oim").style.visibility = "visible";
+		document.getElementById("oim").style.display = "block";
 
-    if (visflag == true){
-    	document.getElementById("oim").style.display = "block";}
+        var legend = L.control({position: 'bottomleft'});
+            legend.onAdd = function (map) {
+        
+            var div = L.DomUtil.create('div', 'legend');
+            var cats = [ '<strong>Legend</strong>',
+					     '<span class="dot" id="hilite"></span><span id="entry">Available</span>', 
+                         '<span class="dot" id="unavailable"></span><span id="entry">Not available</span>',
+			             '<span><i>Note:</i> Areas may show a mixture of colours if multiple years/holdings are available or index areas overlap.</span>'];
+        	div.innerHTML = cats.join('<br />');
+        	return div;
+            };
+        legend.addTo(map);}
+	
 }

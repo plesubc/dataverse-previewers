@@ -111,8 +111,16 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
     	jdict = feature.properties;
     	//Styles any open index map feature a different colour if any
 		//of the above attributes aren't null
-		if (jdict.hasOwnProperty("available") &&
-			jdict.available.toLowerCase() == 'true'){
+		//Also, not everyone read the spec, so some of required
+		//'available' values are a string reading 'true' (ie, 'TRUE')
+		if ((jdict.hasOwnProperty("available") 
+		     && jdict.available !==null) &&
+		     jdict.available == true || 
+			(typeof(jdict.available)=='string' && jdict.available.toLowerCase() == 'true'))
+		//	jdict.available == true
+		//if (jdict.hasOwnProperty("available"))
+				{
+						console.log(jdict.available);
 				visflag = true;
 	            return {fillColor: 'orange',
 	   	        	    fillOpacity: 0.4,

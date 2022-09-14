@@ -3,6 +3,7 @@
 .mapOptions table {width: 100%;}
 .mapOptions table th {border-bottom: 3px solid #000}
 .mapOptions table tr:nth-child(even) {background-color:#EEE;}
+.mapOptions table th:nth-child(even) {padding-left: 1em;}
 .mapOptions td.value {padding-left: 1em}
 .mapOptions td.attr {font-style: italic;
                      border: 1px solid;

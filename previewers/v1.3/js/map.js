@@ -26,49 +26,53 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
 	//Open index map text visibility flag
 	var visflag = false;
 
-    //Creates a tabular attribute table and
-    //strips out null values to make it shorter
-    //although I'm not sure that's the most desirable
+	function whatkind(testme){
+		//Determines the type of geojson
+		return testme['features'][0]['geometry']['type']}
+
     function collate(lay){
-    const jdict = lay.feature.properties;
-    var out = '';
-    out += '<table><th>Attribute Name</th><th>Value</th>'
-    for (const property in jdict){
-    	if (jdict[property]!== null){
-    			out += '<tr><td class="attr">';
-    			out += `${property} </td><td class="value"> ${jdict[property]}`;
-    			out += '</td></tr>';}
-    	};
-    return out}
+		//Creates a tabular attribute table and
+		//strips out null values to make it shorter
+		//although I'm not sure that's the most desirable
+		const jdict = lay.feature.properties;
+		var out = '';
+		out += '<table><th>Attribute Name</th><th>Value</th>'
+		for (const property in jdict){
+			if (jdict[property]!== null){
+					out += '<tr><td class="attr">';
+					out += `${property} </td><td class="value"> ${jdict[property]}`;
+					out += '</td></tr>';}
+			};
+		return out}
 
 
     function collateNoHead(lay){
-	//As collate above, but without table info so that 
-	//multilayer geojsons data can be collated without
-	//separate table headings
-    var out = '';
-    const jdict = lay.feature.properties;
-    for (const property in jdict){
-    	if (jdict[property]!== null){
-    			out += '<tr><td class="attr">';
-    			out += `${property} </td><td class="value"> ${jdict[property]}`;
-    			out += '</td></tr>';}
-    	};
-    return out}
+		//As collate above, but without table info so that 
+		//multilayer geojsons data can be collated without
+		//separate table headings
+		var out = '';
+		const jdict = lay.feature.properties;
+		for (const property in jdict){
+			if (jdict[property]!== null){
+					out += '<tr><td class="attr">';
+					out += `${property} </td><td class="value"> ${jdict[property]}`;
+					out += '</td></tr>';}
+			};
+		return out}
 
 	function customSizer(){
-    //Sets popup to a reasonable size to accommodate the
-    //attribute table. What constitutes this is debatable.
-    customOptions  = { 'className' : 'mapOptions',
-					   'maxWidth' : Math.floor(map.getSize()['x']/2),
-    				   'minWidth' :400,
-					   'maxHeight':map.getSize()['y']-150,
-					   'keepInView': true,
-					   'autoPan' : true};
-    return customOptions}
+		//Sets popup to a reasonable size to accommodate the
+		//attribute table. What constitutes this is debatable.
+		customOptions  = { 'className' : 'mapOptions',
+						   'maxWidth' : Math.floor(map.getSize()['x']/2),
+						   'minWidth' :400,
+						   'maxHeight':map.getSize()['y']-150,
+						   'keepInView': true,
+						   'autoPan' : true};
+		return customOptions}
 
-    //Check if geojson is an Open Index Map
     function is_oim(lay){
+   	 	//Check if geojson is an Open Index Map
     	//Open index map has no real standard for required fields. 
 		//However, these 3 attributes are required for Geoblacklight, so. . .
 		//This is not really ideal, but what can you do
@@ -85,8 +89,8 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
     	 else {return false}
        }
 
-    //And open index map styling
     function style_oim(lay){
+    	//And open index map styling
     	//Styles any open index map layer a different colour if "available" == true
     	 //return {fillColor: '#4E9C68'},//green is for "GO"
     	if (is_oim(lay)==true)
@@ -98,8 +102,8 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
            }
 		}
 
-    //And open index map styling *per feature*
     function style_oim_feat(feature){
+    	//And open index map styling *per feature*
 		//previously I used all 3 properties below to determine
 	    //if these were open index maps.
     	//const oim_def=['available','physHold', 'digHold']
@@ -125,19 +129,31 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
 	            return {fillColor: 'orange',
 	   	        	    fillOpacity: 0.4,
 	   	        	    color: 'orange',
-	   	        	    opacity: 1.0}}
-	    else {  return {fillColor: 'CornflowerBlue',
+	   	        	    opacity: 1.0,
+						radius: 5.0}}
+	    else {  console.log('I should have gotten here'); return {fillColor: 'CornFlowerBlue',
 	    		        fillOpacity: 0.4,
 	    		        color: 'CornflowerBlue',
-	    		        opacity: 1.0}
+	    		        opacity: 1.0,
+						radius: 5.0}
 		}
 		}
 
 	//Add the GeoJSON to the page
 	//yes, it's probably bad form to define the variable and use it in the
-	//function below.
-    //var geoJson = L.geoJSON(gdata, {style:style_oim});
-    var geoJson = L.geoJSON(gdata, {style:style_oim_feat});
+	//function below. And probably worse to make it conditional.
+	if (whatkind(gdata) != 'Point')
+		{
+		var geoJson = L.geoJSON(gdata, {style:style_oim_feat});
+		}
+	else
+		{
+		geoJson = L.geoJSON(gdata, 
+			              {pointToLayer: function (feature, latlng) 
+							  { return L.circleMarker(latlng, 
+								                      style_oim_feat(feature));} 
+						  });
+		}
 
 	geoJson.addTo(map);
     map.fitBounds(geoJson.getBounds());
@@ -148,28 +164,37 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
     	leafletPip.bassackwards = true;
     	var lng = e.latlng.lng;
        	var lat = e.latlng.lat;
-    	featureList = leafletPip.pointInLayer(e.latlng, geoJson, false);
-    	var concat = ['<table><th>Attribute Name</th><th>Value</th>'];
-    	for (var i=0; i < featureList.length; i++ ){
-    		concat.push(collateNoHead(featureList[i]));
-			//Add a separator between detected layers for ease of reading
-			if (i!= featureList.length -1){
-;					concat.push('<tr><td colspan=2 style="background-color:white"><hr /></td></tr>');
+		if (['MultiPolygon', 'Polygon'].includes(whatkind(gdata)))
+				{
+			featureList = leafletPip.pointInLayer(e.latlng, geoJson, false);
+			var concat = ['<table><th>Attribute Name</th><th>Value</th>'];
+			for (var i=0; i < featureList.length; i++ ){
+				concat.push(collateNoHead(featureList[i]));
+				//Add a separator between detected layers for ease of reading
+				if (i!= featureList.length -1){
+	;					concat.push('<tr><td colspan=2 style="background-color:white"><hr /></td></tr>');
+				}
+			 }
+
+			concat.push('</table>');
+			//This section enables a popup on the areas with geometry, otherwise
+			//the popup is empty
+			if (concat.join('') != '<table><th>Attribute Name</th><th>Value</th></table>'){
+				geoJson.bindPopup(concat.join(''), customSizer());
+				geoJson.openPopup(e.latlng);
 			}
-         }
-
-    	concat.push('</table>');
-		//This section enables a popup on the areas with geometry, otherwise
-		//the popup is empty
-		if (concat.join('') != '<table><th>Attribute Name</th><th>Value</th></table>'){
-	    	geoJson.bindPopup(concat.join(''), customSizer());
-    		geoJson.openPopup(e.latlng);
+			geoJson.unbindPopup() //removes popup on clicking on non-attribute space
+			return concat.join('');
+			//returns this in case you need it somewhere else
+			}
+		
+		else{
+			 geoJson.eachLayer(function(layer){layer.bindPopup(collate(layer), customSizer()   )});
+            }	
 		}
-    	geoJson.unbindPopup() //removes popup on clicking on non-attribute space
-    	return concat.join('');
-		//returns this in case you need it somewhere else
-    }
 
+
+		
     //Produces a popup concatenating multiple detected overlapping items 
     //The popup itself is instantiated inside onMapClick
     map.on('click', onMapClick);
@@ -182,7 +207,7 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
 		document.getElementById("oim").style.display = "block";
 
         var legend = L.control({position: 'bottomleft'});
-            legend.onAdd = function (map) {
+		legend.onAdd = function (map) {
         
             var div = L.DomUtil.create('div', 'legend');
             var cats = [ '<strong>Legend</strong>',

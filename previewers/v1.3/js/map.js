@@ -124,14 +124,13 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
 		//	jdict.available == true
 		//if (jdict.hasOwnProperty("available"))
 				{
-						console.log(jdict.available);
 				visflag = true;
 	            return {fillColor: 'orange',
 	   	        	    fillOpacity: 0.4,
 	   	        	    color: 'orange',
 	   	        	    opacity: 1.0,
 						radius: 5.0}}
-	    else {  console.log('I should have gotten here'); return {fillColor: 'CornFlowerBlue',
+	    else {  return {fillColor: 'CornFlowerBlue',
 	    		        fillOpacity: 0.4,
 	    		        color: 'CornflowerBlue',
 	    		        opacity: 1.0,

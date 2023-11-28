@@ -17,8 +17,9 @@ function writeContentAndData(data, fileUrl, file, title, authors) {
     var map = L.map('map').fitWorld();
 
     // load a tile layer
-	const base = L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.png', {
-	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
+	//const base = L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.png', {
+	const base = L.tileLayer('https://c.tile.opentopomap.org/{z}/{x}/{y}.png', {
+	attribution: 'Map data: © <a href="https://openstreetmap.org">OpenStreetMap contributors</a>, SRTM | Map display: © <a href="https://opentopomap.org/about">OpenTopoMap</a> (<a href="http://creativecommons.org/licenses/by/3.0">CC-BY-SA</a>).',
     maxZoom: 20,
     })
 	base.addTo(map);

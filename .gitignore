@@ -1,2 +1,14 @@
 /.project
 /.settings
+leaflet/Greenland.geojson
+leaflet/__pycache__/
+leaflet/codesnippets.txt
+leaflet/i2.html
+leaflet/i3.html
+leaflet/i4.html
+leaflet/leaflet.ajax.min.js
+leaflet/sample.txt
+leaflet/t2.html
+leaflet/test.html
+leaflet/**
+previewers/v1.3/js/map_poly_only.js

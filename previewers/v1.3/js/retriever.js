@@ -4,6 +4,7 @@ var version = null;
 var fileDownloadUrl = null;
 var previewMode = null;
 var locale = null;
+var protocol = null;
 
 function startPreview(retrieveFile) {
     // Retrieve tool launch parameters from URL
@@ -50,8 +51,9 @@ function startPreview(retrieveFile) {
                     // headers: { 'X-Dataverse-key': apiKey },
                     crossite: true,
                     success: function(json, status) {
+						protocol= json.data.protocol;
+							if (protocol == null){protocol ='hdl';}
                         var mdFields = json.data.metadataBlocks.citation.fields;
-
                         var title = "";
                         var authors = "";
                         datasetUrl = json.data.storageIdentifier;
@@ -225,7 +227,8 @@ function startPreview(retrieveFile) {
                 $('<a/>').attr(
                     'href',
                     queryParams.get("siteUrl")
-                    + "/dataset.xhtml?persistentId=doi:"
+                    //+ "/dataset.xhtml?persistentId=doi:"
+                    + `/dataset.xhtml?persistentId=${protocol}:`
                     + datasetUrl + "&version=" + version).text(
                         title))).append(
                             $('<span/>').html(" (<span>" + versionText + "</span> " + version + ")").attr('id', 'version')).append(
